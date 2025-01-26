@@ -24,13 +24,18 @@ interface TransactionRequest {
   data: string;
 }
 
+interface ApproveTokensParams {
+  amount: bigint;
+}
+
+
 export default function Home() {
   const [transactionType, setTransactionType] = useState("erc20");
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [tokenContract, setTokenContract] = useState("");
   const [recipient, setRecipient] = useState("");
-  const [amount, setAmount] = useState<BigInt>(BigInt(0));
+  const [amount, setAmount] = useState<bigint>(BigInt(0));
   const [tokenId, setTokenId] = useState("");
   const [nonce, setNonce] = useState(0); 
   const [signature, setSignature] = useState<string | null>(null);
@@ -45,7 +50,7 @@ export default function Home() {
       setIsWalletConnected(true);
       console.log("Wallet connected:", accounts[0]);
     } catch (error) {
-      if (error.code === 4001) {
+      if ((error as any).code === 4001) {
         console.warn("User rejected the connection request.");
         alert("You declined the wallet connection. Please try again.");
       } else {
@@ -58,12 +63,16 @@ export default function Home() {
   }
 };
 
-const approveTokens = async (amount) => {
+const approveTokens = async ({ amount }: ApproveTokensParams): Promise<void> => {
   try {
-    const provider = new ethers.BrowserProvider(window.ethereum)
+    const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
 
-    const tokenContractInstance = new ethers.Contract(tokenContract, ["function approve(address spender, uint256 amount) public returns (bool)"], signer);
+    const tokenContractInstance = new ethers.Contract(
+      tokenContract,
+      ["function approve(address spender, uint256 amount) public returns (bool)"],
+      signer
+    );
 
     const tx = await tokenContractInstance.approve(contractAddress, amount);
     await tx.wait();
@@ -158,7 +167,7 @@ const approveTokens = async (amount) => {
     try {
       if (transactionType === "erc20") {
 
-        await approveTokens(amount);
+        await approveTokens({ amount });
         // Forward ERC20 transfer
         const tx = await contract.forwardERC20Transfer(
           tokenContract,
