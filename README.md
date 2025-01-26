@@ -59,12 +59,6 @@ async function main() {
 3. Sign meta-transaction
 4. Execute gasless transfer
 
-## Security Considerations
-- Maximum transfer limits
-- Signature validation
-- Gas cost caps
-- Nonce management
-
 ## Contributing
 - Fork repository
 - Create feature branch
