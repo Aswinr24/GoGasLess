@@ -21,6 +21,8 @@ A decentralized meta-transaction platform enabling gasless ERC20 and ERC721 toke
 - Gas cost reimbursement
 - Secure nonce tracking
 
+### deployed contract: 0xa36f5d5e88fea6192edaad2f40345cfe2cd3761c (Seplia Testnet)
+
 ## Setup
 1. Install dependencies
 ```bash
